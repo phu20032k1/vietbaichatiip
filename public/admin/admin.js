@@ -125,7 +125,8 @@ saveNewsBtn.addEventListener("click", async () => {
   const subtitle = subtitleInput.value.trim();
   let slug = slugInput.value.trim();
   const img = imgInput.value.trim();
-  const content = contentInput.value.trim();
+  const content = tinymce.get("contentInput").getContent();
+
 
   if (!title) {
     saveMessage.textContent = "Vui lòng nhập tiêu đề.";

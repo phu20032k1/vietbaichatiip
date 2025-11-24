@@ -86,6 +86,66 @@
   </div>
 </div>
 
+
+
+<!-- FULL WORD-STYLE TinyMCE -->
+<script src="https://cdn.tiny.cloud/1/f6i907pnlns1vqkv5d2srlmk9pkudtb5nc5lebuy0wg77rku/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+tinymce.init({
+  selector: "#contentInput",
+  height: 550,
+  plugins: `
+    advlist anchor autolink autosave charmap code codesample directionality
+    emoticons fullscreen help image importcss insertdatetime link lists media
+    preview quickbars searchreplace table visualblocks visualchars wordcount
+  `,
+  toolbar: `
+    undo redo | blocks fontfamily fontsize | bold italic underline strikethrough |
+    forecolor backcolor | alignleft aligncenter alignright alignjustify |
+    lineheight outdent indent | bullist numlist checklist |
+    table tabledelete | image media link | searchreplace | fullscreen preview |
+    emoticons charmap removeformat code
+  `,
+  menubar: "file edit view insert format tools table help",
+
+  font_family_formats: `
+    Arial=arial,helvetica,sans-serif;
+    Arial Black=arial black,avant garde;
+    Times New Roman=times new roman,times;
+    Courier New=courier new,courier;
+    Roboto=Roboto;
+    Verdana=verdana,geneva;
+    Georgia=georgia,palatino;
+    Tahoma=tahoma,arial;
+  `,
+
+  fontsize_formats: "10px 12px 14px 16px 18px 24px 28px 32px 36px 48px",
+
+  image_title: true,
+  automatic_uploads: true,
+
+  /* DÙNG URL ảnh trực tiếp */
+  images_upload_handler: function (blobInfo, success, failure) {
+      const reader = new FileReader();
+      reader.readAsDataURL(blobInfo.blob());
+      reader.onload = () => success(reader.result);
+      reader.onerror = () => failure("Upload ảnh lỗi");
+  },
+
+  content_style: `
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 20px;
+      line-height: 1.6; 
+    }
+    img { max-width: 100%; border-radius: 8px; }
+  `
+});
+</script>
+
+
+
 <script src="./admin.js"></script>
 </body>
 </html>
