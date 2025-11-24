@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: ["http://localhost:3000", "https://chatiip.com"],
+  origin: ["http://localhost:3000", "https://chatiip.com","https://dynamic-babka-d17d5a.netlify.app"],
   credentials: true
 }));
 
