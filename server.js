@@ -23,10 +23,21 @@ app.use(
   })
 );
 
-// ⭐ SERVE WEB CHÍNH
-app.use("/", express.static(path.join(__dirname, "public/site")));
 
-// ⭐ SERVE ADMIN
+
+// ⭐ Nếu truy cập admin.chatiip.com → load admin panel luôn
+app.use((req, res, next) => {
+  const host = req.headers.host;
+
+  if (host && host.startsWith("admin.chatiip.com")) {
+    return express.static(path.join(__dirname, "public/admin"))(req, res, next);
+  }
+
+  next();
+});
+
+// ⭐ STATIC FILES
+
 app.use("/admin", express.static(path.join(__dirname, "public/admin")));
 
 // ⭐ API
