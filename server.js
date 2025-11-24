@@ -20,6 +20,19 @@ app.use(cors({
 const authRoutes = require("./routes/authRoutes");
 const newsRoutes = require("./routes/newsRoutes");
 
+
+// Serve admin panel directly when using admin.chatiip.com
+app.use((req, res, next) => {
+  const host = req.headers.host;
+
+  if (host && host.startsWith("admin.chatiip.com")) {
+    return express.static(path.join(__dirname, "public/admin"))(req, res, next);
+  }
+
+  next();
+});
+
+
 // ====== STATIC FILES (ADMIN PANEL) ======
 app.use("/admin", express.static(path.join(__dirname, "public/admin")));
 
