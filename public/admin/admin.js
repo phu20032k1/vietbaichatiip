@@ -4,8 +4,7 @@ const API_BASE =
     ? "http://localhost:4000/api"
     : "/api";
 
-
-
+// ====== SEO INPUT ======
 const pageTitleInput = document.getElementById("pageTitleInput");
 const pageHeadingInput = document.getElementById("pageHeadingInput");
 const pageDescriptionInput = document.getElementById("pageDescriptionInput");
@@ -13,11 +12,7 @@ const pageKeywordsInput = document.getElementById("pageKeywordsInput");
 const ogImageInput = document.getElementById("ogImageInput");
 const canonicalInput = document.getElementById("canonicalInput");
 
-
-
-
-// --- GIỮ NGUYÊN TOÀN BỘ PHẦN CÒN LẠI ---
-
+// ====== LOGIN ELEMENTS ======
 const loginView = document.getElementById("loginView");
 const cmsView = document.getElementById("cmsView");
 const loginEmail = document.getElementById("loginEmail");
@@ -26,17 +21,24 @@ const loginBtn = document.getElementById("loginBtn");
 const loginMessage = document.getElementById("loginMessage");
 const logoutBtn = document.getElementById("logoutBtn");
 
-// Form fields
+// ====== FORM INPUT ======
 const titleInput = document.getElementById("titleInput");
 const subtitleInput = document.getElementById("subtitleInput");
 const slugInput = document.getElementById("slugInput");
 const imgInput = document.getElementById("imgInput");
 const contentInput = document.getElementById("contentInput");
+const categoryInput = document.getElementById("categoryInput");
+
 const editingIdInput = document.getElementById("editingId");
 const saveNewsBtn = document.getElementById("saveNewsBtn");
 const resetFormBtn = document.getElementById("resetFormBtn");
 const newsListAdmin = document.getElementById("newsListAdmin");
 const saveMessage = document.getElementById("saveMessage");
+
+// RADIO + CHECKBOX
+const approvedYes = document.querySelector('input[name="approved"]:first-child');
+const approvedNo = document.querySelectorAll('input[name="approved"]')[1];
+const scheduleInput = document.querySelector('input[type="datetime-local"]');
 
 function slugify(str) {
   return str.toString().toLowerCase()
@@ -46,8 +48,10 @@ function slugify(str) {
     .replace(/-+/g, '-');
 }
 
+// ====== LOGIN ======
 async function login() {
   loginMessage.textContent = "";
+
   try {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
@@ -77,15 +81,12 @@ async function login() {
 loginBtn.addEventListener("click", login);
 
 logoutBtn.addEventListener("click", async () => {
-  await fetch(`${API_BASE}/auth/logout`, {
-    method: "POST",
-    credentials: "include"
-  });
-
+  await fetch(`${API_BASE}/auth/logout`, { method: "POST", credentials: "include" });
   cmsView.classList.add("hidden");
   loginView.classList.remove("hidden");
 });
 
+// ====== LOAD NEWS LIST ======
 async function loadNewsAdmin() {
   newsListAdmin.innerHTML = "Đang tải...";
 
@@ -101,28 +102,45 @@ async function loadNewsAdmin() {
       div.innerHTML = `
         <div class="news-item-title">${n.title} <span class='tag'>${n.slug}</span></div>
         <div class="news-item-subtitle">${n.subtitle || ""}</div>
+
         <div class="actions">
           <button class="btn-secondary btn-edit">Sửa</button>
           <button class="btn-danger btn-delete">Xoá</button>
         </div>
       `;
 
+      // ====== NÚT SỬA ======
       div.querySelector(".btn-edit").addEventListener("click", () => {
         editingIdInput.value = n._id;
+
         titleInput.value = n.title;
         subtitleInput.value = n.subtitle || "";
         slugInput.value = n.slug;
         imgInput.value = n.img || "";
-        tinymce.get("contentInput").setContent(n.content || "");
-        pageTitleInput.value = n.pageTitle || "";
-pageDescriptionInput.value = n.pageDescription || "";
-pageKeywordsInput.value = n.pageKeywords || "";
-pageHeadingInput.value = n.pageHeading || "";
-ogImageInput.value = n.ogImage || "";
-canonicalInput.value = n.canonical || "";
 
+        // TinyMCE
+        tinymce.get("contentInput").setContent(n.content || "");
+
+        // Category
+        categoryInput.value = n.category || "Root";
+
+        // SEO fields
+        pageTitleInput.value = n.pageTitle || "";
+        pageHeadingInput.value = n.pageHeading || "";
+        pageDescriptionInput.value = n.pageDescription || "";
+        pageKeywordsInput.value = n.pageKeywords || "";
+        ogImageInput.value = n.ogImage || "";
+        canonicalInput.value = n.canonical || "";
+
+        // Approved
+        if (n.approved === true) approvedYes.checked = true;
+        else approvedNo.checked = true;
+
+        // Scheduled At
+        scheduleInput.value = n.scheduledAt ? n.scheduledAt.slice(0,16) : "";
       });
 
+      // ====== NÚT XOÁ ======
       div.querySelector(".btn-delete").addEventListener("click", async () => {
         if (!confirm("Xoá bài này?")) return;
 
@@ -142,6 +160,7 @@ canonicalInput.value = n.canonical || "";
   }
 }
 
+// ====== LƯU BÀI VIẾT ======
 saveNewsBtn.addEventListener("click", async () => {
   saveMessage.textContent = "";
 
@@ -151,6 +170,7 @@ saveNewsBtn.addEventListener("click", async () => {
   let slug = slugInput.value.trim();
   const img = imgInput.value.trim();
   const content = tinymce.get("contentInput").getContent();
+  const category = categoryInput.value;
 
   if (!title) {
     saveMessage.textContent = "Vui lòng nhập tiêu đề.";
@@ -159,17 +179,17 @@ saveNewsBtn.addEventListener("click", async () => {
 
   if (!slug) slug = slugify(title);
 
-const body = {
-  title, subtitle, slug, img, content,
-
-  pageTitle: pageTitleInput.value.trim(),
-  pageDescription: pageDescriptionInput.value.trim(),
-  pageKeywords: pageKeywordsInput.value.trim(),
-  pageHeading: pageHeadingInput.value.trim(),
-  ogImage: ogImageInput.value.trim(),
-  canonical: canonicalInput.value.trim(),
-};
-
+  const body = {
+    title, subtitle, slug, img, content, category,
+    pageTitle: pageTitleInput.value,
+    pageHeading: pageHeadingInput.value,
+    pageDescription: pageDescriptionInput.value,
+    pageKeywords: pageKeywordsInput.value,
+    ogImage: ogImageInput.value,
+    canonical: canonicalInput.value,
+    approved: approvedYes.checked,
+    scheduledAt: scheduleInput.value || null
+  };
 
   let url = `${API_BASE}/news`;
   let method = "POST";
@@ -194,27 +214,57 @@ const body = {
   }
 
   showToast("Đã lưu bài viết ✔");
+
+  // ====== RESET FORM ======
   editingIdInput.value = "";
   titleInput.value = "";
   subtitleInput.value = "";
   slugInput.value = "";
   imgInput.value = "";
   tinymce.get("contentInput").setContent("");
+  categoryInput.value = "Root";
+
+  pageTitleInput.value = "";
+  pageHeadingInput.value = "";
+  pageDescriptionInput.value = "";
+  pageKeywordsInput.value = "";
+  ogImageInput.value = "";
+  canonicalInput.value = "";
+
+  approvedYes.checked = true;
+  approvedNo.checked = false;
+
+  scheduleInput.value = "";
 
   loadNewsAdmin();
 });
 
+// ====== RESET FORM BUTTON ======
 resetFormBtn.addEventListener("click", () => {
   editingIdInput.value = "";
   titleInput.value = "";
   subtitleInput.value = "";
   slugInput.value = "";
   imgInput.value = "";
-  contentInput.value = "";
+
+  tinymce.get("contentInput").setContent("");
+
+  categoryInput.value = "Root";
+
+  pageTitleInput.value = "";
+  pageHeadingInput.value = "";
+  pageDescriptionInput.value = "";
+  pageKeywordsInput.value = "";
+  ogImageInput.value = "";
+  canonicalInput.value = "";
+
+  approvedYes.checked = true;
+  approvedNo.checked = false;
+
+  scheduleInput.value = "";
 });
 
-
-
+// ====== TOAST ======
 function showToast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
