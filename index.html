@@ -6,195 +6,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, sans-serif;
-      margin: 0;
-      background: #f3f4f6;
-    }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f3f4f6; }
 
-    /* LOGIN */
     .login-box {
-      max-width: 420px;
-      margin: 60px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
+      max-width: 420px; margin: 60px auto;
+      background: #fff; padding: 20px; border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     }
-    .login-box h2 {
-      margin-bottom: 12px;
-    }
-
-    .field {
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 14px;
-    }
-    .field label {
-      font-weight: 500;
-    }
+    .field { margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px; }
     input, textarea, select {
-      border-radius: 6px;
-      border: 1px solid #e5e7eb;
-      padding: 7px 9px;
-      font-size: 14px;
-      font-family: inherit;
+      border-radius: 6px; border: 1px solid #e5e7eb;
+      padding: 7px 9px; font-size: 14px;
     }
 
-    button {
-      border: none;
-      border-radius: 999px;
-      padding: 7px 16px;
-      cursor: pointer;
-      font-size: 14px;
-      font-family: inherit;
-    }
+    button { border: none; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
     .btn-primary { background: #111827; color:#fff; }
     .btn-secondary { background: #e5e7eb; }
     .btn-danger { background: #dc2626; color:#fff; }
-
     .hidden { display: none; }
 
-    /* CMS LAYOUT */
     #cmsView {
-      max-width: 1200px;
-      margin: 20px auto;
-      background: #ffffff;
-      padding: 0 0 20px;
-      border-radius: 12px;
+      max-width: 1200px; margin: 20px auto; background: #ffffff;
+      padding: 0 0 20px; border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.12);
     }
 
     .cms-header {
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 16px 20px; display: flex; justify-content: space-between;
       border-bottom: 1px solid #e5e7eb;
-    }
-    .cms-header h1 {
-      font-size: 22px;
-      margin: 0;
     }
 
     .cms-body {
-      display: grid;
-      grid-template-columns: minmax(0,2.2fr) minmax(0,1.4fr);
-      gap: 16px;
-      padding: 16px 18px 0;
+      display: grid; grid-template-columns: minmax(0,2.2fr) minmax(0,1.4fr);
+      gap: 16px; padding: 16px 18px 0;
     }
 
-    /* BOX TITLE BAR GIỐNG IIP */
-    .box {
-      background: #ffffff;
-      border-radius: 10px;
-      border: 1px solid #e5e7eb;
-      overflow: hidden;
-      margin-bottom: 12px;
-    }
+    .box { background: #ffffff; border-radius: 10px;
+      border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 12px; }
     .box-header {
       padding: 8px 12px;
       background: linear-gradient(90deg,#00a38c,#0090c7);
-      color: #ffffff;
-      font-weight: 600;
-      font-size: 14px;
+      color: #ffffff; font-weight: 600; font-size: 14px;
     }
-    .box-body {
-      padding: 12px;
-    }
+    .box-body { padding: 12px; }
 
-    /* LEFT COLUMN */
-    .left-col .field small {
-      color:#6b7280;
-      font-size: 12px;
-    }
-
-    .actions-row {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-    }
-
-    /* RIGHT COLUMN */
-    .right-col-section + .right-col-section {
-      margin-top: 12px;
-    }
-
-    .prop-group {
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    .prop-group label {
-      display:block;
-      margin-bottom:4px;
-      font-weight:500;
-    }
-    .prop-group input[type="checkbox"],
-    .prop-group input[type="radio"] {
-      margin-right: 4px;
-    }
+    .prop-group { margin-bottom: 10px; font-size: 14px; }
+    .prop-group label { display:block; margin-bottom:4px; font-weight:500; }
 
     .news-item {
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 6px;
-      background: #f9fafb;
-      font-size: 14px;
-    }
-    .news-item-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .tag {
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      margin-left: 4px;
-    }
-    .actions {
-      margin-top: 6px;
-      display: flex;
-      gap: 6px;
+      border: 1px solid #e5e7eb; border-radius: 8px;
+      padding: 8px 10px; margin-bottom: 6px; background: #f9fafb;
     }
 
-    @media (max-width: 900px) {
-      .cms-body {
-        grid-template-columns: 1fr;
-      }
+    #toast {
+      position: fixed; right: 20px; bottom: 20px;
+      background: #16a34a; color: white; padding: 12px 18px;
+      border-radius: 8px; display: none;
+      font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
   </style>
-
-<script type="application/ld+json">
-{
- "@context":"https://schema.org",
- "@type":"WebSite",
- "name":"ChatIIP",
- "url":"https://chatiip.com",
- "potentialAction":{
-   "@type":"SearchAction",
-   "target":"https://chatiip.com/?q={search_term_string}",
-   "query-input":"required name=search_term_string"
- }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "ChatIIP",
-  "url": "https://chatiip.com",
-  "logo": "https://chatiip.com/logo.png"
-}
-</script>
-
 
 </head>
 <body>
@@ -204,53 +75,57 @@
   <h2>Đăng nhập Admin</h2>
   <div class="field">
     <label>Tài khoản</label>
-    <input type="email" id="loginEmail" placeholder="Nhập email">
+    <input type="email" id="loginEmail">
   </div>
   <div class="field">
     <label>Mật khẩu</label>
-    <input type="password" id="loginPassword" placeholder="••••••••">
+    <input type="password" id="loginPassword">
   </div>
   <button class="btn-primary" id="loginBtn">Đăng nhập</button>
-  <p id="loginMessage" style="color:#dc2626; margin-top:8px;"></p>
+  <p id="loginMessage" style="color:#dc2626;"></p>
 </div>
 
-<!-- CMS MAIN -->
+<!-- CMS -->
 <div id="cmsView" class="hidden">
+
   <div class="cms-header">
     <h1>ChatIIP CMS</h1>
     <button class="btn-secondary" id="logoutBtn">Đăng xuất</button>
   </div>
 
   <div class="cms-body">
-    <!-- LEFT COLUMN – THÔNG TIN CHUNG + NỘI DUNG -->
+
+    <!-- LEFT -->
     <div class="left-col">
+
       <div class="box">
         <div class="box-header">Thông tin chung</div>
         <div class="box-body">
+
           <div class="field">
             <label>Tiêu đề:</label>
-            <input type="text" id="titleInput">
-            <small>Ký tự tối đa: 200</small>
+            <input id="titleInput" type="text">
           </div>
 
           <div class="field">
             <label>URL trình duyệt:</label>
-            <input type="text" id="slugInput" placeholder="Nếu bỏ trống sẽ tự sinh theo tiêu đề">
+            <input id="slugInput" type="text">
           </div>
 
           <div class="field">
             <label>Mô tả:</label>
-            <textarea id="subtitleInput" rows="3" placeholder="Nhập nội dung tóm tắt. Tối đa 400 ký tự"></textarea>
+            <textarea id="subtitleInput"></textarea>
           </div>
 
           <div class="field">
             <label>Chuyên mục:</label>
-            <select>
-              <option>Root</option>
-              <option>Tin tức</option>
-              <option>Thông báo</option>
+            <select id="categoryInput">
+              <option value="Root">Root</option>
+              <option value="Tin tức">Tin tức</option>
+              <option value="Thông báo">Thông báo</option>
             </select>
           </div>
+
         </div>
       </div>
 
@@ -264,119 +139,113 @@
       <input type="hidden" id="editingId">
 
       <div class="actions-row">
-        <button class="btn-primary" id="saveNewsBtn">Lưu</button>
+        <button class="btn-primary" id="saveNewsBtn">Đăng</button>
         <button class="btn-secondary" id="resetFormBtn">Xoá form</button>
       </div>
-      <p id="saveMessage" style="margin-top:6px;"></p>
+
+      <p id="saveMessage"></p>
+
     </div>
 
-    <!-- RIGHT COLUMN – THUỘC TÍNH + SEO + DANH SÁCH -->
+    <!-- RIGHT -->
     <div class="right-col">
-      <!-- THUỘC TÍNH -->
-      <div class="box right-col-section">
+
+      <div class="box">
         <div class="box-header">Thuộc tính</div>
         <div class="box-body">
+
           <div class="prop-group">
             <label>Hình minh họa:</label>
-            <input type="text" id="imgInput" placeholder="Dán link ảnh đại diện vào đây">
+            <input id="imgInput" type="text">
           </div>
 
           <div class="prop-group">
             <label>Vị trí:</label>
-            <div>
-              <label><input type="checkbox"> Trang chủ</label>
-              <label><input type="checkbox"> Nổi bật</label>
-            </div>
+            <label><input id="homepageCheck" type="checkbox"> Trang chủ</label>
+            <label><input id="featuredCheck" type="checkbox"> Nổi bật</label>
           </div>
 
           <div class="prop-group">
             <label>Hẹn giờ đăng tin:</label>
-            <input type="datetime-local">
+            <!-- 🔥 SỬA: thêm ID -->
+            <input id="scheduleInput" type="datetime-local">
           </div>
 
           <div class="prop-group">
             <label>Duyệt:</label>
-            <label><input type="radio" name="approved" checked> Có</label>
-            <label><input type="radio" name="approved"> Không</label>
+            <!-- 🔥 SỬA: thêm ID -->
+            <label><input id="approvedYes" type="radio" name="approved" checked> Có</label>
+            <label><input id="approvedNo" type="radio" name="approved"> Không</label>
           </div>
+
         </div>
       </div>
 
       <!-- SEO -->
-      <div class="prop-group">
-  <label>PageTitle:</label>
-  <input id="pageTitleInput" type="text">
-</div>
+      <div class="box">
+        <div class="box-header">SEO</div>
+        <div class="box-body">
 
-<div class="prop-group">
-  <label>PageHeading (H1):</label>
-  <input id="pageHeadingInput" type="text">
-</div>
+          <div class="prop-group">
+            <label>PageTitle:</label>
+            <input id="pageTitleInput" type="text">
+          </div>
 
-<div class="prop-group">
-  <label>Description:</label>
-  <textarea id="pageDescriptionInput" rows="3"></textarea>
-</div>
+          <div class="prop-group">
+            <label>PageHeading (H1):</label>
+            <input id="pageHeadingInput" type="text">
+          </div>
 
-<div class="prop-group">
-  <label>Keywords:</label>
-  <input id="pageKeywordsInput" type="text">
-</div>
+          <div class="prop-group">
+            <label>Description:</label>
+            <textarea id="pageDescriptionInput"></textarea>
+          </div>
 
-<div class="prop-group">
-  <label>OG Image:</label>
-  <input id="ogImageInput" type="text">
-</div>
+          <div class="prop-group">
+            <label>Keywords:</label>
+            <input id="pageKeywordsInput" type="text">
+          </div>
 
-<div class="prop-group">
-  <label>Canonical URL:</label>
-  <input id="canonicalInput" type="text">
-</div>
+          <div class="prop-group">
+            <label>OG Image:</label>
+            <input id="ogImageInput" type="text">
+          </div>
 
+          <div class="prop-group">
+            <label>Canonical URL:</label>
+            <input id="canonicalInput" type="text">
+          </div>
 
-      <!-- DANH SÁCH BÀI VIẾT -->
-      <div class="box right-col-section">
+        </div>
+      </div>
+
+      <!-- Danh sách bài viết -->
+      <div class="box">
         <div class="box-header">Danh sách bài viết</div>
         <div class="box-body">
           <div id="newsListAdmin"></div>
         </div>
       </div>
+
     </div>
+
   </div>
 </div>
 
+<div id="toast">Đã lưu bài viết ✔</div>
 
-
-<!-- TinyMCE giống Word -->
-<script src="https://cdn.tiny.cloud/1/f6i907pnlns1vqkv5d2srlmk9pkudtb5nc5lebuy0wg77rku/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
-
-
+<!-- TinyMCE -->
+<script src="https://cdn.tiny.cloud/1/f6i907pnlns1vqkv5d2srlmk9pkudtb5nc5lebuy0wg77rku/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
 
 <script>
 tinymce.init({
   selector: "#contentInput",
-  height: 480,
-  plugins: `
-    advlist anchor autolink autosave charmap code codesample directionality
-    emoticons fullscreen help image importcss insertdatetime link lists media
-    preview quickbars searchreplace table visualblocks visualchars wordcount
-  `,
-  toolbar: `
-    undo redo | blocks fontfamily fontsize | bold italic underline strikethrough |
-    forecolor backcolor | alignleft aligncenter alignright alignjustify |
-    lineheight outdent indent | bullist numlist checklist |
-    table tabledelete | image media link | searchreplace | fullscreen preview |
-    emoticons charmap removeformat code
-  `,
-  menubar: "file edit view insert format tools table help",
-  content_style: `
-    body { font-family: Arial, sans-serif; padding: 12px; line-height: 1.6; }
-    img { max-width: 100%; border-radius: 8px; }
-  `
+  height: 480
 });
 </script>
 
 <script src="./admin.js"></script>
+
 </body>
 </html>
