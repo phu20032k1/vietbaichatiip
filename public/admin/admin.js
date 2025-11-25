@@ -113,7 +113,7 @@ async function loadNewsAdmin() {
         subtitleInput.value = n.subtitle || "";
         slugInput.value = n.slug;
         imgInput.value = n.img || "";
-        contentInput.value = n.content || "";
+        tinymce.get("contentInput").setContent(n.content || "");
         pageTitleInput.value = n.pageTitle || "";
 pageDescriptionInput.value = n.pageDescription || "";
 pageKeywordsInput.value = n.pageKeywords || "";
@@ -193,13 +193,13 @@ const body = {
     return;
   }
 
-  saveMessage.textContent = "Đã lưu bài viết.";
+  showToast("Đã lưu bài viết ✔");
   editingIdInput.value = "";
   titleInput.value = "";
   subtitleInput.value = "";
   slugInput.value = "";
   imgInput.value = "";
-  contentInput.value = "";
+  tinymce.get("contentInput").setContent("");
 
   loadNewsAdmin();
 });
@@ -212,3 +212,12 @@ resetFormBtn.addEventListener("click", () => {
   imgInput.value = "";
   contentInput.value = "";
 });
+
+
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => (t.style.display = "none"), 3000);
+}

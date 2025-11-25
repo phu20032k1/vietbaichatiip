@@ -169,6 +169,27 @@
         grid-template-columns: 1fr;
       }
     }
+
+
+#toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #16a34a;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
   </style>
 
 <script type="application/ld+json">
@@ -264,7 +285,7 @@
       <input type="hidden" id="editingId">
 
       <div class="actions-row">
-        <button class="btn-primary" id="saveNewsBtn">Lưu</button>
+        <button class="btn-primary" id="saveNewsBtn">Đăng </button>
         <button class="btn-secondary" id="resetFormBtn">Xoá form</button>
       </div>
       <p id="saveMessage" style="margin-top:6px;"></p>
@@ -345,10 +366,12 @@
   </div>
 </div>
 
+<div id="toast">Đã lưu bài viết ✔</div>
+
 
 
 <!-- TinyMCE giống Word -->
-<script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.3/tinymce.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/f6i907pnlns1vqkv5d2srlmk9pkudtb5nc5lebuy0wg77rku/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 
 
