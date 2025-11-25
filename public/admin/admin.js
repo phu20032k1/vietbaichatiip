@@ -1,4 +1,22 @@
-const API_BASE = "/api";
+// Dùng local khi chạy trên localhost, còn lại dùng cùng domain admin.chatiip.com
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000/api"
+    : "/api";
+
+
+
+const pageTitleInput = document.getElementById("pageTitleInput");
+const pageHeadingInput = document.getElementById("pageHeadingInput");
+const pageDescriptionInput = document.getElementById("pageDescriptionInput");
+const pageKeywordsInput = document.getElementById("pageKeywordsInput");
+const ogImageInput = document.getElementById("ogImageInput");
+const canonicalInput = document.getElementById("canonicalInput");
+
+
+
+
+// --- GIỮ NGUYÊN TOÀN BỘ PHẦN CÒN LẠI ---
 
 const loginView = document.getElementById("loginView");
 const cmsView = document.getElementById("cmsView");
@@ -96,6 +114,13 @@ async function loadNewsAdmin() {
         slugInput.value = n.slug;
         imgInput.value = n.img || "";
         contentInput.value = n.content || "";
+        pageTitleInput.value = n.pageTitle || "";
+pageDescriptionInput.value = n.pageDescription || "";
+pageKeywordsInput.value = n.pageKeywords || "";
+pageHeadingInput.value = n.pageHeading || "";
+ogImageInput.value = n.ogImage || "";
+canonicalInput.value = n.canonical || "";
+
       });
 
       div.querySelector(".btn-delete").addEventListener("click", async () => {
@@ -127,7 +152,6 @@ saveNewsBtn.addEventListener("click", async () => {
   const img = imgInput.value.trim();
   const content = tinymce.get("contentInput").getContent();
 
-
   if (!title) {
     saveMessage.textContent = "Vui lòng nhập tiêu đề.";
     return;
@@ -135,7 +159,17 @@ saveNewsBtn.addEventListener("click", async () => {
 
   if (!slug) slug = slugify(title);
 
-  const body = { title, subtitle, slug, img, content };
+const body = {
+  title, subtitle, slug, img, content,
+
+  pageTitle: pageTitleInput.value.trim(),
+  pageDescription: pageDescriptionInput.value.trim(),
+  pageKeywords: pageKeywordsInput.value.trim(),
+  pageHeading: pageHeadingInput.value.trim(),
+  ogImage: ogImageInput.value.trim(),
+  canonical: canonicalInput.value.trim(),
+};
+
 
   let url = `${API_BASE}/news`;
   let method = "POST";
