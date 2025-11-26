@@ -190,6 +190,30 @@
 }
 
 
+
+/* === SCROLL DANH SÁCH BÀI VIẾT (ADMIN) === */
+#newsListAdmin {
+    max-height: 420px;      /* chiều cao cố định */
+    overflow-y: auto;       /* bật thanh cuộn dọc */
+    padding-right: 6px;     /* tránh che nội dung khi có scrollbar */
+}
+
+/* Thanh cuộn đẹp hơn */
+#newsListAdmin::-webkit-scrollbar {
+    width: 8px;
+}
+
+#newsListAdmin::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 6px;
+}
+
+#newsListAdmin::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+
   </style>
 
 <script type="application/ld+json">
