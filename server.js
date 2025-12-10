@@ -43,7 +43,8 @@ app.use((req, res, next) => {
 
 // ⭐ STATIC FILES
 
-app.use("/admin", express.static(path.join(__dirname, "public/admin")));
+app.use("/admin", express.static(path.join(__dirname, "public/admin"), { redirect: false }));
+
 
 // ⭐ API
 const authRoutes = require("./routes/authRoutes");
