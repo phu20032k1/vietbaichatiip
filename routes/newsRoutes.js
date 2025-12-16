@@ -44,7 +44,8 @@ router.post("/", auth, async (req, res) => {
   const {
     title, subtitle, slug, img, content,
     pageTitle, pageDescription, pageKeywords,
-    pageHeading, ogImage, canonical
+    pageHeading, ogImage, canonical,
+    category, approved, scheduledAt
   } = req.body;
 
   if (!title || !slug) {
@@ -73,6 +74,11 @@ router.post("/", auth, async (req, res) => {
     ogImage,
     canonical,
 
+    // Quản trị
+    category,
+    approved: approved !== undefined ? approved : true,
+    scheduledAt: scheduledAt || null,
+
     publishedAt: now,
     modifiedAt: now
   });
@@ -92,7 +98,8 @@ router.put("/:id", auth, async (req, res) => {
   const {
     title, subtitle, slug, img, content,
     pageTitle, pageDescription, pageKeywords,
-    pageHeading, ogImage, canonical
+    pageHeading, ogImage, canonical,
+    category, approved, scheduledAt
   } = req.body;
 
   // Đổi slug nếu có
@@ -109,6 +116,10 @@ router.put("/:id", auth, async (req, res) => {
   item.subtitle = subtitle;
   item.img = img;
   item.content = content;
+
+  if (category !== undefined) item.category = category;
+  if (approved !== undefined) item.approved = approved;
+  if (scheduledAt !== undefined) item.scheduledAt = scheduledAt;
 
   // Cập nhật SEO
   item.pageTitle = pageTitle;

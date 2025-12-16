@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -40,6 +41,11 @@ router.post("/login", async (req, res) => {
 router.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Đã đăng xuất" });
+});
+
+// Kiểm tra phiên đăng nhập hiện tại
+router.get("/me", auth, async (req, res) => {
+  res.json({ user: req.user });
 });
 
 module.exports = router;

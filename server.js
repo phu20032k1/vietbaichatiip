@@ -6,26 +6,35 @@ const cors = require("cors");
 const path = require("path");
 
 const User = require("./models/User");
+const logRoutes = require("./routes/logRoutes");
 
 const app = express();
 
-app.use(express.json());
+// JSON body
+// - tăng limit để admin có thể upload file dạng base64 (không dùng multipart)
+// - nếu bạn muốn giới hạn chặt hơn, có thể tách riêng endpoint upload.
+app.use(express.json({ limit: "100mb" }));
 app.use(cookieParser());
 
+// CORS (đặt trước routes)
 app.use(
   cors({
     origin: [
       "https://chatiip.com",
+      "https://admin.chatiip.com",
       "http://localhost:3000",
       "http://127.0.0.1:5500",
       "http://localhost:5500",
-      "null" 
+      "null"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
+
+// API routes
+app.use("/api/logs", logRoutes);
 
 
 
@@ -45,13 +54,18 @@ app.use((req, res, next) => {
 
 app.use("/admin", express.static(path.join(__dirname, "public/admin"), { redirect: false }));
 
+// Public uploads (PDF, ...)
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads"), { fallthrough: true }));
+
 
 // ⭐ API
 const authRoutes = require("./routes/authRoutes");
 const newsRoutes = require("./routes/newsRoutes");
+const documentRoutes = require("./routes/documentRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/docs", documentRoutes);
 const News = require("./models/News");
 
 // SITEMAP.XML
