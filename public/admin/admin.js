@@ -500,6 +500,7 @@ function fillDocForm(d) {
 
 function statusTag(status) {
   if (status === "Còn hiệu lực") return `<span class="tag ok">Còn hiệu lực</span>`;
+  if (status === "Hết hiệu lực một phần") return `<span class="tag warn">Hết hiệu lực một phần</span>`;
   if (status === "Hết hiệu lực") return `<span class="tag bad">Hết hiệu lực</span>`;
   return `<span class="tag warn">Không xác định</span>`;
 }

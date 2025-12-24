@@ -50,7 +50,7 @@ const legalDocumentSchema = new mongoose.Schema(
     // Trạng thái
     tinhTrang: {
       type: String,
-      enum: ["Còn hiệu lực", "Hết hiệu lực", "Không xác định"],
+      enum: ["Còn hiệu lực", "Hết hiệu lực", "Hết hiệu lực một phần", "Không xác định"],
       default: "Không xác định"
     },
 
