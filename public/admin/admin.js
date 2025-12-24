@@ -104,6 +104,14 @@ function showLogin() {
 async function checkSession() {
   try {
     const me = await apiJson("/auth/me", { method: "GET" });
+
+    // Chỉ cho phép admin vào CMS
+    if (!me?.user || me.user.role !== "admin") {
+      showLogin();
+      loginMessage.textContent = "Tài khoản này không có quyền admin.";
+      return false;
+    }
+
     showCMS(me.user);
     return true;
   } catch {
@@ -145,6 +153,7 @@ const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
 const tabPanels = {
   news: $("tab-news"),
   docs: $("tab-docs"),
+  users: $("tab-users"),
   logs: $("tab-logs")
 };
 
@@ -158,6 +167,7 @@ function setActiveTab(name) {
   if (name === "news") loadNewsList();
   if (name === "docs") loadDocsList();
   if (name === "logs") loadLogs();
+  if (name === "users") loadUsers();
 }
 
 tabButtons.forEach((b) => b.addEventListener("click", () => setActiveTab(b.dataset.tab)));
@@ -833,3 +843,115 @@ async function bootAfterLogin() {
     await bootAfterLogin();
   }
 })();
+
+// ================================
+// USERS MANAGEMENT
+// ================================
+
+let usersState = { page: 1, limit: 20, q: "" };
+
+const userSearch = $("userSearch");
+const userSearchBtn = $("userSearchBtn");
+const userRefreshBtn = $("userRefreshBtn");
+const usersTbody = $("usersTbody");
+const usersTotal = $("usersTotal");
+const usersPagerInfo = $("usersPagerInfo");
+const usersPrevBtn = $("usersPrevBtn");
+const usersNextBtn = $("usersNextBtn");
+
+function roleBadge(role) {
+  const r = (role || "").toLowerCase();
+  return `<span class="badge">${r || "-"}</span>`;
+}
+
+function safe(v) {
+  return (v == null ? "" : String(v)).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+async function loadUsers(page = usersState.page) {
+  usersState.page = page;
+
+  // UI: loading
+  if (usersTbody) {
+    usersTbody.innerHTML = `<tr><td colspan="5" class="muted">Đang tải...</td></tr>`;
+  }
+
+  const q = (usersState.q || "").trim();
+  const qs = new URLSearchParams({
+    page: String(usersState.page),
+    limit: String(usersState.limit),
+    ...(q ? { q } : {})
+  });
+
+  try {
+    const data = await apiJson(`/admin/users?${qs.toString()}`, { method: "GET" });
+
+    const items = data?.items || [];
+    const total = data?.total ?? 0;
+    const pageNow = data?.page ?? usersState.page;
+    const limit = data?.limit ?? usersState.limit;
+
+    if (usersTotal) usersTotal.textContent = `Tổng: ${total} người dùng`;
+    const from = total === 0 ? 0 : (pageNow - 1) * limit + 1;
+    const to = Math.min(total, pageNow * limit);
+    if (usersPagerInfo) usersPagerInfo.textContent = `Hiển thị ${from}–${to} / ${total}`;
+
+    if (!items.length) {
+      usersTbody.innerHTML = `<tr><td colspan="5" class="muted">Không có dữ liệu</td></tr>`;
+      return;
+    }
+
+    usersTbody.innerHTML = items
+      .map((u) => {
+        const created = u.createdAt ? formatDate(u.createdAt) : "-";
+        const updated = u.updatedAt ? formatDate(u.updatedAt) : "-";
+        return `
+          <tr>
+            <td>${safe(u.email)}</td>
+            <td>${safe(u.name || "")}</td>
+            <td>${roleBadge(u.role)}</td>
+            <td>${created}</td>
+            <td>${updated}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    // paging buttons
+    if (usersPrevBtn) usersPrevBtn.disabled = pageNow <= 1;
+    const maxPage = Math.ceil((total || 0) / limit) || 1;
+    if (usersNextBtn) usersNextBtn.disabled = pageNow >= maxPage;
+  } catch (e) {
+    usersTbody.innerHTML = `<tr><td colspan="5" class="muted">Lỗi: ${safe(e.message || "Không tải được dữ liệu")}</td></tr>`;
+  }
+}
+
+if (userSearchBtn) {
+  userSearchBtn.addEventListener("click", () => {
+    usersState.q = (userSearch?.value || "").trim();
+    loadUsers(1);
+  });
+}
+
+if (userRefreshBtn) {
+  userRefreshBtn.addEventListener("click", () => loadUsers(usersState.page));
+}
+
+if (userSearch) {
+  userSearch.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      usersState.q = (userSearch.value || "").trim();
+      loadUsers(1);
+    }
+  });
+}
+
+if (usersPrevBtn) {
+  usersPrevBtn.addEventListener("click", () => loadUsers(Math.max(1, usersState.page - 1)));
+}
+
+if (usersNextBtn) {
+  usersNextBtn.addEventListener("click", () => loadUsers(usersState.page + 1));
+}
+
+

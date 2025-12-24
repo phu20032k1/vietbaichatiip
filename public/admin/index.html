@@ -371,6 +371,16 @@
           transform: translateY(0);
         }
       }
+    
+      /* Users table */
+      .users-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .users-controls input { min-width: 260px; }
+      table.users-table { width: 100%; border-collapse: collapse; }
+      table.users-table th, table.users-table td { border-bottom: 1px solid #e5e7eb; padding: 10px 8px; font-size: 14px; vertical-align: top; }
+      table.users-table th { text-align: left; font-weight: 700; color: #374151; background: #f9fafb; }
+      .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 1px solid #e5e7eb; background: #f3f4f6; font-size: 12px; }
+      .pager { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+      .pager .muted { margin: 0; }
     </style>
   </head>
 
@@ -407,6 +417,7 @@
       <div class="cms-tabs">
         <button class="tab-btn active" data-tab="news">📰 Tin tức</button>
         <button class="tab-btn" data-tab="docs">📚 Văn bản pháp luật</button>
+        <button class="tab-btn" data-tab="users">👤 Người dùng</button>
         <button class="tab-btn" data-tab="logs">🕒 Lịch sử chatbot</button>
       </div>
 
@@ -660,7 +671,51 @@
           </div>
         </div>
 
-        <!-- =============== TAB: LOGS =============== -->
+        
+        <!-- =============== TAB: USERS =============== -->
+        <div id="tab-users" class="tab-content" style="display: none">
+          <div class="box">
+            <div class="row" style="justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div>
+                <div class="title">Danh sách người dùng</div>
+                <div class="muted" id="usersTotal">...</div>
+              </div>
+
+              <div class="users-controls">
+                <input id="userSearch" type="text" placeholder="Tìm theo email hoặc tên..." />
+                <button class="btn" id="userSearchBtn">Tìm</button>
+                <button class="btn secondary" id="userRefreshBtn">Làm mới</button>
+              </div>
+            </div>
+
+            <div style="overflow:auto; margin-top: 12px;">
+              <table class="users-table">
+                <thead>
+                  <tr>
+                    <th style="min-width: 220px;">Email</th>
+                    <th style="min-width: 200px;">Tên</th>
+                    <th style="min-width: 90px;">Role</th>
+                    <th style="min-width: 140px;">Tạo lúc</th>
+                    <th style="min-width: 140px;">Cập nhật</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTbody">
+                  <tr><td colspan="5" class="muted">Chưa có dữ liệu</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pager" style="margin-top: 12px;">
+              <div class="muted" id="usersPagerInfo"></div>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <button class="btn secondary" id="usersPrevBtn">← Trang trước</button>
+                <button class="btn secondary" id="usersNextBtn">Trang sau →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<!-- =============== TAB: LOGS =============== -->
         <div id="tab-logs" class="tab-content" style="display: none">
           <div class="box">
             <div class="box-header">

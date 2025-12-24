@@ -1,7 +1,7 @@
 const express = require("express");
 const ChatLog = require("../models/ChatLog");
 const auth = require("../middleware/auth");
-
+const requireAdmin = require("../middleware/requireAdmin");
 const router = express.Router();
 
 /**
@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
  * Có thể filter theo search, phân trang page/limit
  * /api/logs?search=luong&page=1&limit=50
  */
-router.get("/", auth, async (req, res) => {
+router.get("/", auth, requireAdmin, async (req, res) => {
   try {
     const page = Number(req.query.page || 1);
     const limit = Number(req.query.limit || 50);
